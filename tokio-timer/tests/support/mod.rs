@@ -20,9 +20,11 @@ macro_rules! assert_ready {
 }
 
 macro_rules! assert_not_ready {
-    ($f:expr) => {
-        assert!(!$f.poll().unwrap().is_ready());
-    }
+    ($f:expr) => {{
+        use ::futures::Async::*;
+        let res = $f.poll().unwrap();
+        assert_eq!(res, NotReady);
+    }}
 }
 
 macro_rules! assert_elapsed {
